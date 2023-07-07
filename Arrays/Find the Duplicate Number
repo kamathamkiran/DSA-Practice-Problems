@@ -1,1 +1,45 @@
+#Problem Statement:
+- Given an array of integers nums containing n + 1 integers where each integer is in the range [1, n] inclusive.
+- There is only one repeated number in nums, return this repeated number.
+- You must solve the problem without modifying the array nums and uses only constant extra space.
 
+#Solution:
+
+Brute Force - Use genral sort functio to sort the array and check if nums[i] == nums[i+1] to return.
+              TC: O(NlogN), SC: O(1)
+
+Floyd's Technique - As like slow-fast pointer method in linked lists.
+    int findDuplicate(vector<int>& nums) 
+    {
+        int slow = nums[0], fast = nums[0];
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+        while(slow != fast)
+        {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+        }
+        slow = nums[0];
+        while(slow != fast)
+        {
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+        return slow;
+    }
+
+Marking visited value within the array - As all value ranges from 1 to n and array size is n+1. we set nums[i] value to negartive while traversing.
+                                         So, each value will be negative. But if we find a positive value it states it got repeated two times.
+
+int findDuplicate_mark(int[] nums) 
+{
+    int len = nums.length;
+    for (int num : nums) {
+        int idx = abs(num);
+        if (nums[idx] < 0) {
+            return idx;
+        }
+        nums[idx] = -nums[idx];
+    }
+    return len;
+}
