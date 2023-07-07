@@ -1,0 +1,60 @@
+#Statement:
+Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's.
+You must do it in place.
+
+* Solved using Matrix with Extra space.(General)      TC : O((NM)(N+M)), SC : O(N*M).
+   General method by using extra matrix and if we find a zero in original matix, then we change that rwo and column to zero.
+
+* Solved using Matrix with Constant space.(General)   TC : O((NM)(N+M)), SC : O(1).
+   Here, we go throught same process. But, instead of using extra matrix we use setting values of rows and columns to -9999.
+   After completion of traversing, we change all matrix[i][j] with -9999 to 0.
+   This escapes us from using extra matrix.
+
+* Solved using Array + Hash Table (Unordered set).    TC : O(N*M), SC : O(N+M).
+   Here simple double for loop will be used and also two unordered_sets for storing rows and columns.
+   During double traversal, if we see a matrix[i][j] with zero, we store that row in row_set and column in col_set.
+   After traversal, if current row or column is present in set, then we change that row or column, respectively, to zero.
+
+* Solved using Matrix with Constant space. Optimized. TC : O(N*M), SC : O(1).
+    void setZeroes(vector<vector<int>>& matrix) 
+    {
+            int n = matrix.size();
+            int m = matrix[0].size();
+            bool flag1 = false, flag2 = false;
+            for(int i=0; i<n; i++){
+                if(matrix[i][0] == 0){
+                    flag1 = true;
+                    break;
+                }
+            }
+            for(int j=0; j<m; j++){
+                if(matrix[0][j] == 0){
+                    flag2 = true;
+                    break;
+                }
+            }
+            for(int i=1; i<n; i++){
+                for(int j=1; j<m; j++){
+                    if(matrix[i][j] == 0){
+                        matrix[i][0] = matrix[0][j] = 0;
+                    }
+                }
+            }
+            for(int i=1; i<n; i++){
+                for(int j=1; j<m; j++){
+                    if(matrix[i][0] == 0 || matrix[0][j] == 0){
+                        matrix[i][j] = 0;
+                    }
+                }
+            }
+            if(flag1 == true){
+                for(int i=0; i<n; i++){
+                    matrix[i][0] = 0;
+                }
+            }
+            if(flag2 == true){
+                for(int j=0; j<m; j++){
+                    matrix[0][j] = 0;
+                }
+            }
+        }
