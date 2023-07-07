@@ -2,6 +2,8 @@
 Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's.
 You must do it in place.
 
+#Solution:
+
 * Solved using Matrix with Extra space.(General)      TC : O((NM)(N+M)), SC : O(N*M).
    General method by using extra matrix and if we find a zero in original matix, then we change that rwo and column to zero.
 
@@ -16,6 +18,7 @@ You must do it in place.
    After traversal, if current row or column is present in set, then we change that row or column, respectively, to zero.
 
 * Solved using Matrix with Constant space. Optimized. TC : O(N*M), SC : O(1).
+
     void setZeroes(vector<vector<int>>& matrix) 
     {
             int n = matrix.size();
