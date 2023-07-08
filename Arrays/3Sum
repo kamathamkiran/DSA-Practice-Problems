@@ -1,0 +1,79 @@
+#Problem Statement:
+- Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
+- Notice that the solution set must not contain duplicate triplets.
+
+#Solution:
+
+1. Solved using Array(Three Nested Loop) + Sorting + Hash Table(set). Brute Force Approach.
+- Sort the array and use three loop and check if nums[i]+nums[j]+nums[k] == 0.
+- Use set container to escape from duplicates.
+Time Complexity - O(N^3)
+Space Complexity - O(N)
+
+2. Solved using Array(Two Nested Loop) + Sorting + Hash Table(set).
+- Sort the array and use inner loop for two pointer method to find nums[ptr1]+nums[ptr2] == -nums[i].
+- Use set container to escape from duplicates.
+
+vector<vector<int>> threeSum(vector<int>& nums) 
+{
+    set<vector<int>>s;
+    sort( nums.begin(), nums.end() );
+    int n = nums.size();
+    for(int i = 0; i < n; i++)
+    {
+        int k = -1 * nums[i];
+        int ptr1 = i+1, ptr2 = n-1;
+        while( ptr1 < ptr2 )
+        {
+            if( nums[ptr1] + nums[ptr2] == k)
+            {
+                s.insert({nums[i],nums[ptr1],nums[ptr2]});
+                ptr1++;
+                ptr2--;
+            }
+            else if(nums[ptr1] + nums[ptr2] > k)
+            {
+                ptr2--;
+            }
+            else ptr1++;
+        }
+    }
+    return s;
+}
+Time Complexity - O(N^2.log(N)) - logN is for insert operation by set container
+Space Complexity - O(N)
+
+3. Solved using Array(Two Nested Loop) + Sorting. Optimized Approach.
+- Same as above, we use double loop. But here we don't use set to remove duplicates.
+- Instead we move across elements thar are equal to current low and high.
+- See below code for more clarity.
+
+vector<vector<int>> threeSum(vector<int>& nums) 
+{
+    int n = nums.size();
+    sort(nums.begin(), nums.end());
+    vector<vector<int>> output;
+    for(int i=0; i < n-1; i++)
+    {
+        int low = i+1, high = n-1;
+        while(low < high)
+        {
+            if(nums[i] + nums[low] + nums[high] < 0){
+                low++;
+            }
+            else if(nums[i] + nums[low] + nums[high] > 0){
+                high--;
+            }
+            else{
+                output.push_back({nums[i], nums[low], nums[high]});
+                int tempIndex1 = low, tempIndex2 = high;
+                while(low < high && nums[low] == nums[tempIndex1]) low++;
+                while(low < high && nums[high] == nums[tempIndex2]) high--;
+            }
+        }
+        while(i+1 < n && nums[i] == nums[i+1]) i++;
+    }
+    return output;
+}
+Time Complexity - O(N^2)
+Space Complexity - O(1)
