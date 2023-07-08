@@ -1,0 +1,28 @@
+#Problem Statement:
+- You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
+- Find two lines that together with the x-axis form a container, such that the container contains the most water.
+- Return the maximum amount of water a container can store.
+
+#Solution:
+Brute Force - Use double for loop and count waterCapacity for every pair of heights.
+              Where waterCapacity = min(height[i],height[j])*(j-i).
+
+Optimized - Two pointer approach.
+            Use waterCapacity formula from above and at same time move the left pointer if left height is less else vicebers since we need max Water capacity.
+
+int maxArea(vector<int>& height) 
+{
+    int ptr1 = 0, ptr2 = height.size() - 1;
+    int maxWater = 0;
+    while(ptr1 < ptr2)
+    {
+         int curWater = min(height[ptr1],height[ptr2]) * (ptr2 - ptr1);
+         maxWater = max(maxWater,curWater);
+         if(height[ptr1] < height[ptr2])
+         {
+             ptr1++;
+         }
+         else ptr2--;
+    }
+    return maxWater;
+}
