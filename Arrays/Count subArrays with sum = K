@@ -1,0 +1,59 @@
+#Problem Statement:
+- Given an array of integers nums and an integer k, return the total number of subarrays whose sum equals to k.
+- A subarray is a contiguous non-empty sequence of elements within an array.
+
+#Solution:
+1. Brute Force - Double loop solution
+for(int i = 0; i < n; i++) // traverse from the array
+{
+    int sum = arr[i]; 
+    if(sum == k) count++;
+    for(int j = i + 1; j < n; j++) 
+    {
+        sum += arr[j]; 
+        if(sum == k) count++; 
+    }  
+}
+
+2. PrefixSum + Hash map Solution - Time: O(N), Space: O(N)
+- First calculate prefix sum array. 
+- Let a + b = sum and if we find sum-b in map, then increase count by it's repetance.
+
+int subarraySum(vector<int>& nums, int k) 
+{
+    int prefix[nums.size()];
+    prefix[0] = nums[0];
+    for(int i = 1; i < nums.size(); i++)
+    {
+        prefix[i] = prefix[i-1] + nums[i];
+    }
+    unordered_map<int,int>mp;
+    int count = 0;
+    for(int i = 0; i < nums.size(); i++)
+    {
+        if(prefix[i] == k)
+          count++;
+        if(mp.find(prefix[i]-k) != mp.end())
+        {
+            count += mp[prefix[i]-k];
+        }
+        mp[prefix[i]]++;
+    }
+    return count;
+}
+
+3. Optimzed Solution - No requirement of prefix array.
+                     - Time: O(N), Space: O(N)
+
+int subarraySum(vector<int>& nums, int k) 
+{
+    unordered_map<int,int> m; int temp = 0, count = 0; 
+    m[0] = 1; 
+    for(int i=0; i<nums.size(); i++){
+        temp += nums[i]; 
+        if(m.find(temp-k) != m.end()) count += m[temp-k]; 
+        m[temp]++; 
+    }
+    return count; 
+}
+                       
