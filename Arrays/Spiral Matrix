@@ -1,0 +1,76 @@
+#Problem Statement:
+- Given an m x n matrix, return all elements of the matrix in spiral order.
+
+#solution:
+- ALL Solutions have TC: O(N*M)
+
+1. 4 variable Solution:
+vector<int> spiralOrder(vector<vector<int>>& matrix) 
+{
+    vector<int>res;
+    int top = 0, bottom = matrix.size()-1;
+    int left = 0, right = matrix[0].size()-1;
+    while(top <= bottom || left <= right)
+    {
+        for(int j = left; j <= right; j++)
+        {
+            res.push_back(matrix[top][j]);
+        }
+        top++;
+        if(top > bottom || left > right)break;
+        for(int i = top; i <= bottom; i++)
+        {
+            res.push_back(matrix[i][right]);
+        }
+        right--;
+        if(top > bottom || left > right)break;
+        for(int j = right; j >= left; j--)
+        {
+            res.push_back(matrix[bottom][j]);
+        }
+        bottom--;
+        if(top > bottom || left > right)break;
+        for(int i = bottom; i >= top; i--)
+        {
+            res.push_back(matrix[i][left]);
+        }
+        left++;
+    }
+    return res;
+}
+
+2. Two Variable Solution:
+
+vector<int> spiralOrder(vector<vector<int>>& matrix) 
+{
+    vector<int>v;
+    int n = matrix.size();
+    int m = matrix[0].size();
+    int p=0, q=0;
+    while(p < (n+1)/2 && q < (m+1)/2)
+    {
+        for(int j=q;j<m-q;j++)
+        {
+            v.push_back(matrix[p][j]);
+        }
+        for(int i=p+1;i<n-p;i++)
+        {
+            v.push_back(matrix[i][m-1-q]);
+        }
+        if(p!=n-1-p){
+            for(int j=m-1-q-1;j>=q;j--)
+            {
+                v.push_back(matrix[n-1-p][j]);
+            }
+        }
+        if(q!=m-1-q){ 
+            for(int i=n-1-p-1;i>=p+1;i--)
+            {
+                v.push_back(matrix[i][q]);
+            }
+        }
+        p++;
+        q++;
+    }
+    return v;
+}
