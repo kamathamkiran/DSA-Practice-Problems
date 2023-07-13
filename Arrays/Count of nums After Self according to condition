@@ -1,0 +1,131 @@
+#Problem Statement:
+- Given an integer array nums, return the number of reverse pairs in the array.
+- A reverse pair is a pair (i, j) where: 0 <= i < j < nums.length and 
+                                         nums[i] > 2 * nums[j].
+
+#Example:
+- Input: nums = [1,3,2,3,1]
+- Output: 2
+- Explanation: The reverse pairs are:
+  (1, 4) --> nums[1] = 3, nums[4] = 1, 3 > 2 * 1
+  (3, 4) --> nums[3] = 3, nums[4] = 1, 3 > 2 * 1
+
+#Solution:
+1.Brute Force Approach 
+- Use Double loop to find pairs and count according to given condition.
+
+    int reversePairs(vector<int>& nums) {
+        int n = nums.size();
+        long long reversePairsCount = 0;
+        for(int i=0; i<n-1; i++){
+            for(int j=i+1; j<n; j++){
+                if(nums[i] > 2*(long long)nums[j]){
+                    reversePairsCount++;
+                }
+            }
+        }
+        return reversePairsCount;
+    }
+Time complexity - O(N^2)
+Space complexity - O(1)
+
+2.Merge Sort Technique
+
+    int countPairs(vector<int>&nums,int low,int high)
+    {
+        if(low >= high)
+           return 0;
+        int mid = low + (high-low)/2;
+        int res = countPairs(nums,low,mid) + countPairs(nums,mid+1,high);
+
+        int j = mid+1;
+        for(int i=low; i<=mid; i++)
+        {
+            while(j<=high && nums[i] > 2*(long long)nums[j]){
+                j++;
+            }
+            res += j-(mid+1);
+        }
+        // Merge Sort algo
+        int size = high-low+1;
+        vector<int> temp(size, 0);
+        int left = low, right = mid+1, k=0;
+        while(left<=mid && right<=high){
+            if(nums[left] < nums[right]){
+                temp[k++] = nums[left++];
+            }
+            else{
+                temp[k++] = nums[right++];
+            }
+        }
+        while(left<=mid){
+            temp[k++] = nums[left++]; 
+        }
+        while(right<=high){
+            temp[k++] = nums[right++]; 
+        }
+        int m=0;
+        //copy sorted elements to nums
+        for(int i=low; i<=high; i++){
+            nums[i] = temp[m++];
+        }
+        return res;
+    }
+    int reversePairs(vector<int>& nums) 
+    {
+        return countPairs(nums,0,nums.size()-1);
+    }
+Time complexity - O(NlogN)
+Space complexity - O(N) [ For temp array ] + O(logN) [ stack space ]
+
+3.BST Solution
+- we will define the tree node as follows, where val is the node value and cnt is the total number 
+  of elements in the subtree rooted at current node that are greater than or equal to val:
+class Node {
+    int val, cnt;
+    Node left, right;
+        
+    Node(int val) {
+        this.val = val;
+        this.cnt = 1;
+    }
+}
+int search(Node root, long val) {
+    if (root == null) {
+    	return 0;
+    } else if (val == root.val) {
+    	return root.cnt;
+    } else if (val < root.val) {
+    	return root.cnt + search(root.left, val);
+    } else {
+    	return search(root.right, val);
+    }
+}
+Node insert(Node root, int val) {
+    if (root == null) {
+        root = new Node(val);
+    } else if (val == root.val) {
+        root.cnt++;
+    } else if (val < root.val) {
+        root.left = insert(root.left, val);
+    } else {
+        root.cnt++;
+        root.right = insert(root.right, val);
+    }
+    return root;
+}
+- And finally the main program, in which we will search for all elements no less than twice of current 
+  element plus 1 (converted to long type to avoid overflow) while insert the element itself into the BST.
+int reversePairs(int[] nums) 
+{
+    int res = 0;
+    Node root = null;
+    	
+    for (int num : nums) {
+        res += search(root, 2L * num + 1);
+        root = insert(root, num);
+    }
+    return res;
+}
+Time complexity - O(NlogN)
+Space complexity - O(N)
